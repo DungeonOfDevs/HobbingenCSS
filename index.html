@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Das große Rätsel von Hobbingen</title>
+    <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+    <div class="bg" aria-hidden="true"></div>
+
+    <header class="topbar">
+        <div class="brand">
+        <span class="sigil" aria-hidden="true">🍃</span>
+        <div>
+            <h1>Das große Rätsel von Hobbingen</h1>
+            <p class="subtitle">
+            Ein gemütlicher Tag im Auenland… bis du eine versiegelte Vorratskammer findest.
+            Wer <strong>80%</strong> der Prüfungen besteht, erhält das Passwort.
+            </p>
+        </div>
+        </div>
+
+        <div class="hud">
+        <div class="pill">
+            <span class="label">Ebene</span>
+            <span id="hudLevel" class="value">—</span>
+        </div>
+        <div class="pill">
+            <span class="label">Frage</span>
+            <span id="hudQuestion" class="value">—</span>
+        </div>
+        <div class="pill">
+            <span class="label">Score</span>
+            <span id="hudScore" class="value">0%</span>
+        </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- START SCREEN -->
+        <section id="screenStart" class="card screen active" aria-labelledby="startTitle">
+        <h2 id="startTitle">Willkommen in Hobbingen, Reisende:r!</h2>
+
+        <p>
+            Du wanderst über sanfte, <strong>grüne Hügel</strong>, vorbei an Wiesen voller Gänseblümchen.
+            In der Ferne rauchen Kamine, und aus runden Fenstern fällt warmes Licht.
+            Es riecht nach frischem Brot, Apfelkuchen und… nach einem Geheimnis.
+        </p>
+
+        <p>
+            Am Ende eines kleinen Pfads entdeckst du eine besonders hübsche, <strong>runde Hobbit Tür</strong>.
+            Daneben hängt ein Schild (sehr ordentlich, aber leicht schief):
+            <em>„Vorratskammer der Guten Dinge, nur für Wissende!“</em>
+        </p>
+
+        <p>
+            Als du näher kommst, hörst du leises Kichern. Hinter einem Busch sitzt ein Hobbit mit buschigen Augenbrauen,
+            einem Notizbuch und einem ernsten Gesichtsausdruck, der trotzdem freundlich wirkt.
+            Er flüstert: <strong>„Psst! Das Dorf hat eine kleine Prüfung vorbereitet. Drei Ebenen. Ein Passwort.“</strong>
+        </p>
+
+        <p>
+            Du nickst. Natürlich willst du hinein, nicht aus Gier, nein… sondern aus rein wissenschaftlicher Neugier.
+            (Und vielleicht auch wegen der legendären <strong>zweiten Frühstücks</strong> Vorräte.)
+        </p>
+
+        <div class="settings">
+            <label class="toggle">
+            <input id="shuffleToggle" type="checkbox" checked />
+            <span>Fragen innerhalb der Ebene mischen</span>
+            </label>
+            <label class="toggle">
+            <input id="instantFeedbackToggle" type="checkbox" checked />
+            <span>Sofortiges Feedback anzeigen</span>
+            </label>
+        </div>
+
+        <div class="card" style="margin-top:14px;">
+            <h3 style="margin:0 0 8px;">Die drei Ebenen der Hobbit-Prüfung</h3>
+            <ul style="margin:0; padding-left:18px; line-height:1.5;">
+            <li><strong>Ebene I:</strong> Die grünen Hügel – du beweist Aufmerksamkeit und Klarheit.</li>
+            <li><strong>Ebene II:</strong> Die runden Türen – du findest dich zurecht und erkennst Muster.</li>
+            <li><strong>Ebene III:</strong> Das große Fest – du behältst den Überblick bis zum Schluss.</li>
+            </ul>
+            <p style="margin:10px 0 0;">
+            Bestehst du insgesamt mindestens <strong>80%</strong>, verrät dir die Chronik von Hobbingen das
+            <strong>Passwort</strong> zur Vorratskammer.
+            </p>
+        </div>
+
+        <button id="btnStart" class="btn primary" style="margin-top:16px;">Die Hobbit Prüfung beginnen</button>
+
+        <p class="hint" style="margin-top:14px;">
+            Hinweis: Wenn du die Fragen austauschen willst, passiert das in <code>script.js</code>.
+            Diese Seite ist nur die Geschichte und Oberfläche.
+        </p>
+        </section>
+
+        <!-- LEVEL TRANSITION SCREEN -->
+        <section id="screenLevel" class="card screen" aria-live="polite">
+        <h2 id="levelTitle">—</h2>
+        <p id="levelText" class="subtitle" style="margin-top:10px;">—</p>
+
+        <div class="card" style="margin-top:14px;">
+            <p style="margin:0; line-height:1.5;">
+            Ein Hobbit schiebt dir einen kleinen Zettel zu.
+            Darauf steht: <em>„Nimm dir Zeit. Lies genau. Und vergiss nicht zu atmen, wir Hobbits nehmen Prüfungen ernst.“</em>
+            </p>
+        </div>
+
+        <div class="actions" style="margin-top:18px;">
+            <button id="btnLevelContinue" class="btn primary" type="button">Weiter zur Ebene</button>
+        </div>
+        </section>
+
+        <!-- QUIZ SCREEN -->
+        <section id="screenQuiz" class="card screen" aria-live="polite">
+        <div class="levelBanner" id="levelBanner">
+            <span class="levelName" id="levelName">—</span>
+            <span class="levelFlavor" id="levelFlavor">—</span>
+        </div>
+
+        <div class="progressRow">
+            <div class="progressBar" aria-hidden="true">
+            <div class="progressFill" id="progressFill"></div>
+            </div>
+            <div class="progressText" id="progressText">—</div>
+        </div>
+
+        <p class="subtitle" style="margin-top:-6px;">
+            Der Hobbit-Proktor räuspert sich. <em>„Antworten bitte ehrlich. Mogeln zählt als schlechtes Benehmen,
+            und schlechtes Benehmen führt zu… leerem Teekessel.“</em>
+        </p>
+
+        <h2 class="question" id="questionText">—</h2>
+
+        <form id="answersForm" class="answers" autocomplete="off">
+            <!-- answers injected by script.js -->
+        </form>
+
+        <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+
+        <div class="actions">
+            <!-- Wenn du Skip entfernt hast, darf dieser Button nicht mehr existieren -->
+            <button id="btnSkip" class="btn ghost" type="button" title="Optional: überspringen (zählt als falsch)">
+            Überspringen
+            </button>
+            <button id="btnNext" class="btn primary" type="button" disabled>
+            Weiter
+            </button>
+        </div>
+
+        <p class="hint" style="margin-top:14px;">
+            Tipp aus dem Auenland: Wenn du dir unsicher bist, wähle die Antwort, die <strong>am hobbitischsten</strong> klingt
+            klar, freundlich und verständlich.
+        </p>
+        </section>
+
+        <!-- RESULT SCREEN -->
+        <section id="screenResult" class="card screen" aria-labelledby="resultTitle">
+        <h2 id="resultTitle">Das Urteil von Hobbingen</h2>
+
+        <p class="subtitle" style="margin-top:10px;">
+            Die letzten Sonnenstrahlen fallen auf die runde Tür. Der Hobbit hält den Atem an.
+            <em>„Nun… bist du wissend genug für unsere Vorratskammer?“</em>
+        </p>
+
+        <div class="resultGrid">
+            <div class="resultBox">
+            <div class="resultLabel">Gesamt</div>
+            <div id="resultPercent" class="resultValue">—</div>
+            </div>
+            <div class="resultBox">
+            <div class="resultLabel">Richtig</div>
+            <div id="resultCorrect" class="resultValue">—</div>
+            </div>
+            <div class="resultBox">
+            <div class="resultLabel">Fragen</div>
+            <div id="resultTotal" class="resultValue">—</div>
+            </div>
+        </div>
+
+        <div id="passwordBox" class="passwordBox">
+            <!-- injected by script.js -->
+        </div>
+
+        <div class="actions">
+            <button id="btnReview" class="btn ghost" type="button">Antworten-Log anzeigen</button>
+            <button id="btnRestart" class="btn primary" type="button">Nochmal versuchen</button>
+        </div>
+
+        <details id="reviewLog" class="review">
+            <summary>Antworten & Lösungen</summary>
+            <div id="reviewContent" class="reviewContent"></div>
+        </details>
+
+        <p class="hint" style="margin-top:14px;">
+            Egal wie es ausgeht: In Hobbingen gibt es immer Tee. Und meistens auch Kuchen.
+        </p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <span>© Hobbingen – Prüfungen der runden Tür</span>
+        <span class="dot">•</span>
+        <span>Offline nutzbar</span>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
